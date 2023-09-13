@@ -4918,7 +4918,7 @@ html [class*='section-'].section-bottom-0 {
 	right: 0;
 	bottom: calc( 100% - 2px);
 	height: 65px;
-	background-image: url("../images/decor-wave-bottom.png");
+	/* background-image: url("../images/decor-wave-bottom.png"); */
 }
 
 .bg-gray-100 {
@@ -4965,7 +4965,7 @@ html [class*='section-'].section-bottom-0 {
 	right: 0;
 	bottom: calc( 100% - 2px);
 	height: 65px;
-	background-image: url("../images/decor-gray-top.png");
+	/* background-image: url("../images/decor-gray-top.png"); */
 }
 
 /*
