@@ -19,6 +19,9 @@
 .bg-green h1, .post-corporate.post-corporate-img-bg h2, .section-main-bunner h2, .context-dark h2, .bg-gray-600 h2, .bg-gray-700 h2, .bg-gray-800 h2, .bg-primary h2, .bg-pink h2, .bg-secondary h2, .bg-secondary-2 h2, .bg-green h2, .post-corporate.post-corporate-img-bg h3, .section-main-bunner h3, .context-dark h3, .bg-gray-600 h3, .bg-gray-700 h3, .bg-gray-800 h3, .bg-primary h3, .bg-pink h3, .bg-secondary h3, .bg-secondary-2 h3, .bg-green h3, .post-corporate.post-corporate-img-bg h4, .section-main-bunner h4, .context-dark h4, .bg-gray-600 h4, .bg-gray-700 h4, .bg-gray-800 h4, .bg-primary h4, .bg-pink h4, .bg-secondary h4, .bg-secondary-2 h4, .bg-green h4, .post-corporate.post-corporate-img-bg h5, .section-main-bunner h5, .context-dark h5, .bg-gray-600 h5, .bg-gray-700 h5, .bg-gray-800 h5, .bg-primary h5, .bg-pink h5, .bg-secondary h5, .bg-secondary-2 h5, .bg-green h5, .post-corporate.post-corporate-img-bg h6, .section-main-bunner h6, .context-dark h6, .bg-gray-600 h6, .bg-gray-700 h6, .bg-gray-800 h6, .bg-primary h6, .bg-pink h6, .bg-secondary h6, .bg-secondary-2 h6, .bg-green h6, .post-corporate.post-corporate-img-bg [class^='heading-'], .section-main-bunner [class^='heading-'], .context-dark [class^='heading-'], .bg-gray-600 [class^='heading-'], .bg-gray-700 [class^='heading-'], .bg-gray-800 [class^='heading-'], .bg-primary [class^='heading-'], .bg-pink [class^='heading-'], .bg-secondary [class^='heading-'], .bg-secondary-2 [class^='heading-'], .bg-green [class^='heading-'] {
 	color: #ffffff;
 }
+html {
+	scroll-behavior: smooth;
+}
 
 a:focus,
 button:focus {
@@ -474,7 +477,7 @@ a[href*='tel'], a[href*='mailto'] {
 		left: -15px;
 		height: 100%;
 		width: 2px;
-		background: #C4C4C4;
+		/* background: #C4C4C4; */
 	}
 }
 
@@ -4435,7 +4438,7 @@ html [class*='section-'].section-bottom-0 {
 	}
 }
 
-.section-main-bunner:after {
+/* .section-main-bunner:after {
 	content: '';
 	z-index: 10;
 	position: absolute;
@@ -4443,8 +4446,8 @@ html [class*='section-'].section-bottom-0 {
 	right: 0;
 	bottom: -2px;
 	height: 66px;
-	background-image: url("../images/decor-wave-bottom.png");
-}
+	background-color: #000000;
+} */
 
 .section-main-bunner .main-bunner-title {
 	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -5744,7 +5747,7 @@ html.tablet .ui-to-top {
 	height: 48px;
 	line-height: 48px;
 	cursor: pointer;
-	color: #E7E7E7;
+	/* color: #E7E7E7; */
 	background-color: transparent;
 	border: none;
 	display: none;
@@ -6871,4 +6874,15 @@ html.rd-navbar-fixed-linked .page {
 
 html:not(.ie-11):not(.ios) .parallax-disabled {
 	background-attachment: fixed;
+}
+
+.discord-btn {
+	background-color: #F1C93B;
+	/* box-shadow: 4px 4px 4px black; */
+	border: none;
+	color: #212A3E;
+}
+
+.extra {
+	font-size: large;
 }
