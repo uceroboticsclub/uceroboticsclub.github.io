@@ -6886,3 +6886,7 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 .extra {
 	font-size: large;
 }
+
+p a:hover {
+	color: #FFD93D;
+}
