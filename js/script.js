@@ -77,16 +77,16 @@
 		 * @desc Attach form validation to elements
 		 * @param {object} elements - jQuery object
 		 */
-		// function attachFormValidator(elements) {
-		// 	// Custom validator - phone number
-		// 	regula.custom({
-		// 		name: 'PhoneNumber',
-		// 		defaultMessage: 'Invalid phone number format',
-		// 		validator: function() {
-		// 			if ( this.value === '' ) return true;
-		// 			else return /^(\+\d)?[0-9\-\(\) ]{5,}$/i.test( this.value );
-		// 		}
-		// 	});
+		function attachFormValidator(elements) {
+			// Custom validator - phone number
+			regula.custom({
+				name: 'PhoneNumber',
+				defaultMessage: 'Invalid phone number format',
+				validator: function() {
+					if ( this.value === '' ) return true;
+					else return /^(\+\d)?[0-9\-\(\) ]{5,}$/i.test( this.value );
+				}
+			});
 
 			for (var i = 0; i < elements.length; i++) {
 				var o = $(elements[i]), v;
