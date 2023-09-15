@@ -1,74 +1,89 @@
-// "use strict";
+"use strict";
 (function () {
-	// Global variables
-	var userAgent = navigator.userAgent.toLowerCase(),
-		initialDate = new Date(),
+    // Global variables
+    var userAgent = navigator.userAgent.toLowerCase(),
+        initialDate = new Date(),
+        $document = $(document),
+        $window = $(window),
+        $html = $("html"),
+        $body = $("body"),
+        isDesktop = $html.hasClass("desktop"),
+        isIE = (function () {
+            if (userAgent.indexOf("msie") !== -1) {
+                return parseInt(userAgent.split("msie")[1], 10);
+            } else if (userAgent.indexOf("trident") !== -1) {
+                return 11;
+            } else if (userAgent.indexOf("edge") !== -1) {
+                return 12;
+            } else {
+                return false;
+            }
+        })(),
+        isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+        windowReady = false,
+        isNoviBuilder = false,
+        livedemo = true;
 
-		$document = $(document),
-		$window = $(window),
-		$html = $("html"),
-		$body = $("body"),
-
-		isDesktop = $html.hasClass("desktop"),
-		isIE = userAgent.indexOf("msie") !== -1 ? parseInt(userAgent.split("msie")[1], 10) : userAgent.indexOf("trident") !== -1 ? 11 : userAgent.indexOf("edge") !== -1 ? 12 : false,
-		isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-		windowReady = false,
-		isNoviBuilder = false,
-		livedemo = true,
-
-		plugins = {
-			bootstrapTooltip: $("[data-toggle='tooltip']"),
-			copyrightYear: $(".copyright-year"),
-			materialParallax: $(".parallax-container"),
-			preloader: $(".preloader"),
-			rdNavbar: $(".rd-navbar"),
-			rdMailForm: $(".rd-mailform"),
-			rdInputLabel: $(".form-label"),
-			regula: $("[data-constraints]"),
-			wow: $(".wow")
-		};
+    var plugins = {
+        bootstrapTooltip: $("[data-toggle='tooltip']"),
+        copyrightYear: $(".copyright-year"),
+        materialParallax: $(".parallax-container"),
+        preloader: $(".preloader"),
+        rdNavbar: $(".rd-navbar"),
+        rdMailForm: $(".rd-mailform"),
+        rdInputLabel: $(".form-label"),
+        regula: $("[data-constraints]"),
+        wow: $(".wow")
+    };
 
 	// Initialize scripts that require a loaded page
 	$window.on('load', function () {
 		// Page loader & Page transition
-		if (plugins.preloader.length && !isNoviBuilder) {
-			pageTransition({
-				target: document.querySelector( '.page' ),
-				delay: 0,
-				duration: 500,
-				classIn: 'fadeIn',
-				classOut: 'fadeOut',
-				classActive: 'animated',
-				conditions: function (event, link) {
-					return !/(\#|callto:|tel:|mailto:|:\/\/)/.test(link) && !event.currentTarget.hasAttribute('data-lightgallery');
-				},
-				onTransitionStart: function ( options ) {
-					setTimeout( function () {
-						plugins.preloader.removeClass('loaded');
-					}, options.duration * .75 );
-				},
-				onReady: function () {
-					plugins.preloader.addClass('loaded');
-					windowReady = true;
-				}
-			});
+		if (shouldShowPageLoader()) {
+			handlePageTransition();
 		}
-
+	
 		// Material Parallax
-		if ( plugins.materialParallax.length ) {
-			if ( !isNoviBuilder && !isIE && !isMobile) {
-				plugins.materialParallax.parallax();
-			} else {
-				for ( var i = 0; i < plugins.materialParallax.length; i++ ) {
-					var $parallax = $(plugins.materialParallax[i]);
-
-					$parallax.addClass( 'parallax-disabled' );
-					$parallax.css({ "background-image": 'url('+ $parallax.data("parallax-img") +')' });
-				}
-			}
+		if (shouldEnableMaterialParallax()) {
+			enableMaterialParallax();
 		}
 	});
-
+	
+	function shouldShowPageLoader() {
+		return plugins.preloader.length && !isNoviBuilder;
+	}
+	
+	function handlePageTransition() {
+		pageTransition({
+			target: document.querySelector('.page'),
+			delay: 0,
+			duration: 500,
+			classIn: 'fadeIn',
+			classOut: 'fadeOut',
+			classActive: 'animated',
+			conditions: function (event, link) {
+				return !/(\#|callto:|tel:|mailto:|:\/\/)/.test(link) && !event.currentTarget.hasAttribute('data-lightgallery');
+			},
+			onTransitionStart: function (options) {
+				setTimeout(function () {
+					plugins.preloader.removeClass('loaded');
+				}, options.duration * 0.75);
+			},
+			onReady: function () {
+				plugins.preloader.addClass('loaded');
+				windowReady = true;
+			}
+		});
+	}
+	
+	function shouldEnableMaterialParallax() {
+		return plugins.materialParallax.length && !isNoviBuilder && !isIE && !isMobile;
+	}
+	
+	function enableMaterialParallax() {
+		plugins.materialParallax.parallax();
+	}
+	
 	// Initialize scripts that require a finished document
 	$(function () {
 		isNoviBuilder = window.xMode;
@@ -82,34 +97,36 @@
 			regula.custom({
 				name: 'PhoneNumber',
 				defaultMessage: 'Invalid phone number format',
-				validator: function() {
-					if ( this.value === '' ) return true;
-					else return /^(\+\d)?[0-9\-\(\) ]{5,}$/i.test( this.value );
+				validator: function (value) {
+					return value === '' || /^(\+\d)?[0-9\-\(\) ]{5,}$/i.test(value);
 				}
 			});
-
-			for (var i = 0; i < elements.length; i++) {
-				var o = $(elements[i]), v;
-				o.addClass("form-control-has-validation").after("<span class='form-validation'></span>");
-				v = o.parent().find(".form-validation");
-				if (v.is(":last-child")) o.addClass("form-control-last-child");
-			}
-
-			elements.on('input change propertychange blur', function (e) {
-				var $this = $(this), results;
-
-				if (e.type !== "blur") if (!$this.parent().hasClass("has-error")) return;
-				if ($this.parents('.rd-mailform').hasClass('success')) return;
-
-				if (( results = $this.regula('validate') ).length) {
-					for (i = 0; i < results.length; i++) {
-						$this.siblings(".form-validation").text(results[i].message).parent().addClass("has-error");
-					}
+		
+			elements.each(function () {
+				var $element = $(this);
+				$element.addClass("form-control-has-validation")
+					.after("<span class='form-validation'></span>");
+				if ($element.next().is(":last-child")) {
+					$element.addClass("form-control-last-child");
+				}
+			});
+		
+			elements.on('input change propertychange blur', function () {
+				var $element = $(this);
+				if ($element.parents('.rd-mailform').hasClass('success')) return;
+		
+				var results = $element.regula('validate');
+				var $validation = $element.siblings(".form-validation");
+		
+				if (results.length) {
+					results.forEach(function (result) {
+						$validation.text(result.message).parent().addClass("has-error");
+					});
 				} else {
-					$this.siblings(".form-validation").text("").parent().removeClass("has-error")
+					$validation.text("").parent().removeClass("has-error");
 				}
 			}).regula('bind');
-
+		
 			var regularConstraintsMessages = [
 				{
 					type: regula.Constraint.Required,
@@ -121,24 +138,23 @@
 				},
 				{
 					type: regula.Constraint.Numeric,
-					newMessage: "Only numbers are required"
+					newMessage: "Only numbers are required."
 				},
 				{
 					type: regula.Constraint.Selected,
 					newMessage: "Please choose an option."
 				}
 			];
-
-
-			for (var i = 0; i < regularConstraintsMessages.length; i++) {
-				var regularConstraint = regularConstraintsMessages[i];
-
+		
+			regularConstraintsMessages.forEach(function (regularConstraint) {
 				regula.override({
 					constraintType: regularConstraint.type,
 					defaultMessage: regularConstraint.newMessage
 				});
-			}
+			});
 		}
+		
+		
 
 		/**
 		 * @desc Check if all elements pass validation
@@ -147,32 +163,30 @@
 		 * @return {boolean}
 		 */
 		function isValidated(elements, captcha) {
-			var results, errors = 0;
-
-			if (elements.length) {
-				for (var j = 0; j < elements.length; j++) {
-
-					var $input = $(elements[j]);
-					if ((results = $input.regula('validate')).length) {
-						for (k = 0; k < results.length; k++) {
-							errors++;
-							$input.siblings(".form-validation").text(results[k].message).parent().addClass("has-error");
-						}
-					} else {
-						$input.siblings(".form-validation").text("").parent().removeClass("has-error")
-					}
+			var errors = 0;
+		
+			elements.each(function () {
+				var $input = $(this);
+				var results = $input.regula('validate');
+				var $validation = $input.siblings(".form-validation");
+		
+				if (results.length) {
+					results.forEach(function (result) {
+						errors++;
+						$validation.text(result.message).parent().addClass("has-error");
+					});
+				} else {
+					$validation.text("").parent().removeClass("has-error");
 				}
-
-				if (captcha) {
-					if (captcha.length) {
-						return validateReCaptcha(captcha) && errors === 0
-					}
-				}
-
-				return errors === 0;
+			});
+		
+			if (captcha && captcha.length) {
+				return validateReCaptcha(captcha) && errors === 0;
 			}
-			return true;
+		
+			return errors === 0;
 		}
+		
 
 		/**
 		 * @desc Initialize Bootstrap tooltip with required placement
